@@ -6,15 +6,15 @@ const theme = createTheme({
             main:'#38BEFF',
             dark:'#003F5C'
         },
-        Communication:{
+        "Communication":{
             light: '#EDFCFF',
             dark: '#3EBEFF'
         },
-        VisualArts:{
+        "Visual Arts":{
             light:'#DCCCFF',
             dark:'#905CFF'
         },
-        Music:{
+        "Music":{
             light:'#FFEDC8',
             dark: '#F9B215'
         }

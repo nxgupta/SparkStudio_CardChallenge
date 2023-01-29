@@ -1,63 +1,115 @@
 import React from 'react'
-import data from '../utils/data'
-import { Box, Card, CardActions, CardContent, CardHeader, Typography, Button, Link, Stack, Rating, Divider } from '@mui/material'
-const CourseCard = () => {
+import { Box, Card, CardContent, Typography, Button, Stack, Rating, Divider, useTheme } from '@mui/material'
+import styled from '@emotion/styled';
+
+const CourseCard = ({ rating, games_count, category_name, original_price, discounted_price, name, certificate_count, num_classes, min_age, max_age, pitch, curriculum_outcomes }) => {
+
+  const rate = rating.split(';');
+  const perClass = Math.floor(discounted_price / num_classes)
+  const off = Math.round((original_price - discounted_price) * 100 / original_price)
+  const theme = useTheme();
+
+  let themeColor = theme.palette[category_name].light
+
+
+  const StyledCard = styled(Card)(({ theme }) => ({
+    boxShadow: '0 2px 10px rgba(0, 0, 0, 0.25)',
+    margin:'50px 10px',
+    maxWidth: 350, 
+    width: '100%',
+    transition: 'transform 0.5s',
+    '& .bannerBox':{
+      color: '#FFFFFF',
+      width: '50%',
+      position: 'relative',
+      height: '34px',
+      display: 'flex',
+      alignItems: 'center',
+      backgroundColor:theme.palette[category_name].dark
+    },
+    '& .triangleBox':{
+      position:'absolute',
+      width: '25px',
+      height: '25px',
+      right: '-12px',
+      top: 4,
+      transform: 'rotate(45deg)',
+      backgroundColor:theme.palette[category_name].light
+    },
+    '& .offerBox':{
+      display: 'flex',
+      justifyContent: 'center', alignItems: 'center',
+      color: '#333333',
+      px: '10px',
+      paddingLeft: '16px',
+      borderBottomLeftRadius: '95%',
+      height: '70px',
+      width: '55px',
+      backgroundColor:theme.palette[category_name].dark
+    },
+    '& .btn':{
+      background: 'linear-gradient(90deg, #F3705B 0%, #FCB444 100%)', borderRadius: '25px', padding: '10px 36px',
+      textTransform: 'capitalize', color: 'white', cursor: 'pointer'
+    },
+    '& .benefitsBanner':{ display: 'flex', alignItems: 'center', gap: '8px'},
+    
+    '& .benefitsText':{fontWeight: 600, fontSize: '14px', lineHeight: '16.8px' },
+
+    '&:hover': {
+      transform: 'translateY(-50px)',
+      '& .parentBox': {
+        backgroundColor: theme.palette[category_name].dark
+      },
+      '& .bannerBox': {
+        backgroundColor: theme.palette[category_name].light,
+
+        '& #sessionBanner':{  
+          color: '#333333',
+        }
+      },
+      '& .triangleBox':{
+        backgroundColor:theme.palette[category_name].dark
+      },
+      '& .offerBox':{
+        backgroundColor: theme.palette[category_name].light
+      },
+      '& #name':{
+        color:'#FFFFFF'
+      },
+      '& #reviews':{
+        color:'#FFFFFF'
+      },
+    },
+  }
+  ))
+
+
   return (
     <div>
-      <Card sx={{ maxWidth: 350 }}>
-        <Box bgcolor='#D5F1FE;
-' paddingBottom='20px'>
+      <StyledCard>
+        <Box bgcolor={themeColor} paddingBottom='20px' className='parentBox'>
           <Stack direction='row' justifyContent='space-between' alignItems='center'>
-            <Box sx={{
-              backgroundColor: '#38BEFF',
-              color: 'white',
-              width: '50%',
-              position: 'relative',
-              height: '34px',
-              display: 'flex',
-              alignItems: 'center',
-            }}>
-              <Typography marginLeft
-                color='white' fontWeight='700'>
-                18 sessions
+            <Box className='bannerBox'>
+              <Typography id='sessionBanner' marginLeft color='white' fontWeight='700'>
+                {num_classes} sessions
               </Typography>
-              <Box sx={{
-                position: 'absolute',
-                width: '25px',
-                height: '25px',
-                right: '-12px',
-                top: 4,
-                backgroundColor: 'white',
-                transform: 'rotate(45deg)',
-                backgroundColor: '#D5F1FE',
-              }}>
-
+              <Box className='triangleBox'>
               </Box>
             </Box>
-            <Box bgcolor='#38BEFF' sx={{
-              display: 'flex',
-              justifyContent: 'flex-end', alignItems: 'center',
-              color: 'black',
-              px: '10px',
-              paddingLeft: '16px',
-              borderBottomLeftRadius: '95%',
-              height: '70px',
-              width: '55px',
-
-            }} >
+            <Box className='offerBox' >
               <Typography fontWeight='700'>
-                20%<br />off
+                {off}%<br />off
               </Typography>
             </Box>
           </Stack>
           <Box paddingLeft='20px'>
-            <Typography sx={{ color: 'black', fontSize: '20px', lineHeight: '30px', fontWeight: '700' }}>
-              Public Speaking Learn
+            <Typography sx={{ color: theme.palette[category_name].dark, fontSize: '20px', lineHeight: '30px', fontWeight: '700',maxWidth:'245px' }} id='name' fontFamily='"Poppins" !important'>
+              {name}
             </Typography>
             <Stack direction='row' gap='8px' alignItems='center' marginTop='4px'>
-              <Rating name="read-only" value={4} readOnly />
-              <Typography fontSize='14px'>
-                (50 reviews)
+              <Rating name="read-only" value={+rate[0]} max={+rate[1]} precision={0.1} readOnly />
+              <Typography fontSize='14px' id='reviews'>
+                ({rate[2]} reviews)
               </Typography>
             </Stack>
           </Box>
@@ -65,77 +117,66 @@ const CourseCard = () => {
         <Stack>
           <Box padding='16px'>
             <Typography marginBottom='16px'>
-              Master the most sought-after 21st century skill oratory, through interactive speaking activities
+              {pitch}
             </Typography>
-            <Typography fontWeight='700' marginBottom='16px'>
+            <Typography color='#000000' fontWeight='700' marginBottom='16px'>
               Students will achieve
             </Typography>
-            <Typography sx={{display:'flex', flexDirection:'column', gap:'16px'}}>
-              <li>
-                understand elements and structure of a story
-              </li>
-              <li>
-                practice weaving stories with the addition of elements and details
-              </li>
-              <li>
-                learn to narrate with confidence using expressions and voice modulation
-              </li>
-              <li>
-                + ....
-              </li>
+            <Typography sx={{ display: 'flex', flexDirection: 'column', gap: '12px', lineHeight: '20px', color:'#666666' }}>
+            {curriculum_outcomes.map((para,i)=>(<li key={i}>{para}</li>))}
             </Typography>
-            <Box my={2}><a style={{fontWeight: 500, fontSize: '14px', lineHeight: '16.8px', color:'black'}} href="#" underline="always">
+            <Box my={2}><a style={{ fontWeight: 500, fontSize: '14px', lineHeight: '17px', color: '#333333' }} href="#" underline="always" fontStyle='normal'>
               View Detailed lesson plan</a></Box>
           </Box>
-          <Divider sx={{margin:'0 16px'}}/>
+          <Divider sx={{ margin: '0 16px' }} />
           <CardContent>
             <Stack>
               <Stack direction='row' justifyContent='space-between' alignItems=''>
                 <Box>
-                  <Typography sx={{ fontWeight: 700, fontSize: '24px', lineHeight: '28.8px' }}>
-                    ₹ 9999
+                  <Typography sx={{ fontWeight: 700, fontSize: '24px', lineHeight: '29px' }}>
+                    ₹ {discounted_price}
                   </Typography>
                 </Box>
                 <Box display='flex' alignItems='center' gap='4px'>
                   <Typography sx={{ fontWeight: 700, fontSize: '18px', lineHeight: '21.6px' }}>
-                    ₹ 200
+                    ₹ {perClass}
                   </Typography>
                   <Typography variant='span' sx={{ opacity: 0.7 }}>
                     per class
                   </Typography>
                 </Box>
               </Stack>
-              <del style={{ opacity: 0.7 }}>₹ 5999</del>
-              <Typography variant='span' sx={{fontWeight:500, fontSize:'13px', lineHeight:'15.6px', color:'#F47759', textAlign:'center', padding:'15px 0'}}>
+              <del style={{ opacity: 0.7 }}>₹ {original_price}</del>
+              <Typography variant='span' sx={{ fontWeight: 500, fontSize: '13px', lineHeight: '16px', color: '#F47759', textAlign: 'center', padding: '10px 0' }}>
                 We'll schedule the slots as per your convenience
               </Typography>
             </Stack>
           </CardContent>
-          <Stack direction='row' justifyContent='space-between' alignItems='center' bgcolor='#D5F1FE' padding='12px'>
-              <Box sx={{display:'flex', alignItems:'center', gap:'8px'}}>
-                <img src='/Images/Activities.png'/>
-                <Typography sx={{fontWeight:600, fontSize:'14px', lineHeight:'16.8px'}}>8 Activities</Typography>
-              </Box>
-              <Box sx={{display:'flex', alignItems:'center', gap:'8px'}}>
-                <img src='/Images/Games.png'/>
-                <Typography sx={{fontWeight:600, fontSize:'14px', lineHeight:'16.8px'}}>3 Games</Typography>
-              </Box>
-              <Box sx={{display:'flex', alignItems:'center', gap:'8px'}}>
-                <img src='/Images/Certificate.png'/>
-                <Typography sx={{fontWeight:600, fontSize:'14px', lineHeight:'16.8px'}}>1 Certificate</Typography>
-              </Box>
-            </Stack>
+          <Stack direction='row' justifyContent='space-between' alignItems='center' bgcolor={themeColor} padding='12px'>
+            <Box className='benefitsBanner'>
+              <img src='/Images/Activities.png' />
+              <Typography className='benefitsText'>8 Activities</Typography>
+            </Box>
+            <Box className='benefitsBanner'>
+              <img src='/Images/Games.png' />
+              <Typography className='benefitsText'>{games_count} Games</Typography>
+            </Box>
+            <Box className='benefitsBanner'>
+              <img src='/Images/Certificate.png' />
+              <Typography className='benefitsText'>{certificate_count} Certificate</Typography>
+            </Box>
+          </Stack>
           <Box display='flex' justifyContent='center' alignItems='center'
-          margin='22px 0'>
-          <Button sx={{background: 'linear-gradient(90deg, #F3705B 0%, #FCB444 100%)', borderRadius:'25px', padding:'10px 36px',
-        textTransform:'capitalize', color:'white', cursor:'pointer'}}>
-          Buy Course
-          </Button>
-          </Box>  
+            margin='22px 0'>
+            <Button className='btn'>
+              Buy Course
+            </Button>
+          </Box>
         </Stack>
-      </Card >
+      </StyledCard>
     </div >
   )
 }
 
 export default CourseCard
+
